@@ -1,0 +1,14 @@
+{
+  "name": "aws-controltower",
+  "version": "1.0.0",
+  "description": "AWS ELB/Autoscaling controlling tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocka"
+  },
+  "author": "David Oliveira <d.oliveira@prozone.org>",
+  "license": "BSD",
+  "dependencies": {
+    "aws-sdk": ">=2.6.6"
+  }
+}
