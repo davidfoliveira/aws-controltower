@@ -1,5 +1,5 @@
 var
-    autoscaling = require('../../lib/aws/autoscaling');
+    autoscaling = require('../../../lib/aws/autoscaling');
 
 autoscaling.scale('eu-west-1', ['JacquardPreProd-JacquardDirectEuWest1AutoScalingGroup-193UO71ZHICH2'], '+20%', {dryRun: true}, function(err, res) {
 	console.log(err);
