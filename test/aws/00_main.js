@@ -11,7 +11,8 @@ console.log(JSON.stringify(aws.$('elb.bla.bli')))
 console.log(JSON.stringify(aws.$('elb#jqd-Prod.bla.bli .box.stuff')))
 console.log(JSON.stringify(aws.$('elb#jqd-Prod.bla.bli > .box.stuff')))
 
-aws.getResources(aws.$("elb"), function(err, res){
+
+aws.getResources(aws.$("elb#Test@eu-west-1"), function(err, res){
 	if ( err ) {
 		console.log("Error getting all elbs");
 		return process.exit(-1);
