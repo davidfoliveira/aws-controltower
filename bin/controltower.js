@@ -4,7 +4,7 @@ var
     async       = require('async'),
     aws         = require('../lib/aws'),
     exprs       = require('../lib/exprs'),
-    CONF        = require('../conf/controltower.conf'),
+    conf        = require('../lib/conf'),
     STATS       = { },
     UPDATING    = false;
 
@@ -18,7 +18,7 @@ function updateLive() {
             analyseData();
             return updateLive();
         });
-    }, CONF.liveUpdateTimeout || 30000);
+    }, conf.liveUpdateTimeout || 30000);
 }
 
 // Update live data
@@ -30,13 +30,13 @@ function updateData(callback) {
     console.log("Reading live data...");
 
     // For each region in the configuration
-    async.map(CONF.regions,
+    async.map(conf.regions,
         function(region, nextRegion){
 
             // For each metric type in the configuration
-            async.map(Object.keys(CONF.metrics),
+            async.map(Object.keys(conf.metrics),
                 function(metric, nextMetric) {
-                    return aws.cloudwatch.getLastSamples(region, CONF.metrics[metric], 2, function(err,data){
+                    return aws.cloudwatch.getLastSamples(region, conf.metrics[metric], 2, function(err,data){
                         if ( err ) {
                             console.log("Error getting live '"+metric+"': ",err);
                             return next(null,false);
@@ -76,11 +76,11 @@ function updateData(callback) {
 function analyseData(callback) {
 
     // Evaluate the expressions for each region (for now)
-    CONF.regions.forEach(function(REGION){
+    conf.regions.forEach(function(REGION){
         var action = null;
 
         // Evaluate every expression in the configuration
-        CONF.triggers.forEach(function(trigger){
+        conf.triggers.forEach(function(trigger){
             if ( !trigger._expr || !trigger._action ) {
                 console.log("No trigger expr/action on trigger, ignoring...");
                 return;
@@ -111,13 +111,13 @@ function importHistory(callback) {
     console.log("Importing history...");
 
     // For each region in the configuration
-    async.map(CONF.regions,
+    async.map(conf.regions,
         function(region, nextRegion){
 
             // For each metric type in the configuration
-            async.map(Object.keys(CONF.metrics),
+            async.map(Object.keys(conf.metrics),
                 function(metric, nextMetric){
-                    aws.cloudwatch.getLastSamples(region, CONF.metrics[metric], 7200, function(err, data){
+                    aws.cloudwatch.getLastSamples(region, conf.metrics[metric], 7200, function(err, data){
                         if ( !STATS[region] )
                             STATS[region] = {};
                         if ( !STATS[region][metric] )
@@ -159,7 +159,7 @@ function runTriggerAction(trigger) {
  */
 
 // Parse trigger expressions
-CONF.triggers.forEach(function(t){
+conf.triggers.forEach(function(t){
     if ( t.expr )
         t._expr = exprs.parse(t.expr);
     if ( t.action )
