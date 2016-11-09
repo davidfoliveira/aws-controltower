@@ -16,6 +16,12 @@ var aws = require('../../lib/aws');
 // console.log("11: ", JSON.stringify(aws.$('elb#jqd-Prod[TagName1=TagValue1][TagName2=TagValue2] > [TagName1=TagValue1][TagName2=TagValue2]'), 0, 4))
 
 
+/*
+ TODO:
+   - Resource children support
+   - Test everything
+ */
+
 aws.getResources(aws.$('elb@eu-west-1#Test[TagName1$=1][TagName2=TagValue2]'), function(err, res){
     if ( err ) {
         console.log("Error getting all elbs");
@@ -24,3 +30,13 @@ aws.getResources(aws.$('elb@eu-west-1#Test[TagName1$=1][TagName2=TagValue2]'), f
     console.log(res);
     return process.exit(0);
 });
+/*
+aws.getResources(aws.$('asg@eu-west-1[TagOne^=Value]'), function(err, res){
+    if ( err ) {
+        console.log("Error getting all ASGs");
+        return process.exit(-1);
+    }
+    console.log(res);
+    return process.exit(0);
+});
+*/
